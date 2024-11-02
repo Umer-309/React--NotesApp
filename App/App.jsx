@@ -2,8 +2,6 @@ import React from "react"
 import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
 import Split from "react-split"
-import { addDoc, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firestore'
-import { notesCollection, db } from './firebase'
 
 export default function App() {
     const [notes, setNotes] = React.useState([])
@@ -20,63 +18,64 @@ export default function App() {
      */
 
 
-    const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
+    // const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
 
-    const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt)
+    // const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt)
 
-    React.useEffect(() => {
-        const unsubscribe = onSnapshot(notesCollection, snapshot => {
-            const newArr = snapshot.docs.map(doc => ({
-                ...doc.data(),
-                id: doc.id
-            }))
-            setNotes(newArr)
-        })
-        return unsubscribe
-    }, [])
+    // React.useEffect(() => {
+    //     const unsubscribe = onSnapshot(notesCollection, snapshot => {
+    //         const newArr = snapshot.docs.map(doc => ({
+    //             ...doc.data(),
+    //             id: doc.id
+    //         }))
+    //         setNotes(newArr)
+    //     })
+    //     return unsubscribe
+    // }, [])
 
-    React.useEffect(() => {
-        if (!currentNoteId) {
-            setCurrentNoteId(notes[0]?.id)
-        }
-    }, [notes])
+    // React.useEffect(() => {
+    //     if (!currentNoteId) {
+    //         setCurrentNoteId(notes[0]?.id)
+    //     }
+    // }, [notes])
 
-    React.useEffect(() => {
-        if (currentNote) {
-            setTempNoteText(currentNote.body)
-        }
-    }, [currentNote])
+    // React.useEffect(() => {
+    //     if (currentNote) {
+    //         setTempNoteText(currentNote.body)
+    //     }
+    // }, [currentNote])
 
-    React.useEffect(() => {
-        const timeId = setTimeout(() => {
-            if(tempNoteText !== currentNote.body){
-                updateNote(tempNoteText)
-            } 
-        }, 500);
-        return () => clearTimeout(timeId)
-    }, [tempNoteText])
+    // React.useEffect(() => {
+    //     const timeId = setTimeout(() => {
+    //         if(tempNoteText !== currentNote.body){
+    //             updateNote(tempNoteText)
+    //         } 
+    //     }, 500);
+    //     return () => clearTimeout(timeId)
+    // }, [tempNoteText])
 
 
 
     async function createNewNote() {
-        const newNote = {
-            body: "# Type your markdown note's title here",
-            createdAt: Date.now(),
-            updatedAt: Date.now()
-        }
-        const newNotesRef = await addDoc(notesCollection, newNote)
-        setCurrentNoteId(newNotesRef.id)
+        console.log('Hello World')
+        // const newNote = {
+        //     body: "# Type your markdown note's title here",
+        //     createdAt: Date.now(),
+        //     updatedAt: Date.now()
+        // }
+        // const newNotesRef = await addDoc(notesCollection, newNote)
+        // setCurrentNoteId(newNotesRef.id)
     }
 
-    function updateNote(text) {
-        const docRef = doc(db, "notes", currentNoteId)
-        setDoc(docRef, { body: text, updatedAt: Date.now() }, { merge: true })
-    }
+    // function updateNote(text) {
+    //     const docRef = doc(db, "notes", currentNoteId)
+    //     setDoc(docRef, { body: text, updatedAt: Date.now() }, { merge: true })
+    // }
 
-    async function deleteNote(noteId) {
-        const docRef = doc(db, "notes", noteId)
-        await deleteDoc(docRef)
-    }
+    // async function deleteNote(noteId) {
+    //     const docRef = doc(db, "notes", noteId)
+    //     await deleteDoc(docRef)
+    // }
 
 
     return (
